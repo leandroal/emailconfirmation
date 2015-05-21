@@ -13,9 +13,11 @@ device {
             CONFIG += \
                 config_pri_source_group1
         } else {
-            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/qt4) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
-            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/qt4) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
             LIBS += -lQtCore
 
@@ -64,6 +66,8 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/MessageHandler.hpp) \
         $$quote($$BASEDIR/src/applicationheadless.hpp)
 }
+
+INCLUDEPATH += $$quote($$BASEDIR/src)
 
 CONFIG += precompile_header
 

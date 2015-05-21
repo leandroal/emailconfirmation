@@ -8,6 +8,12 @@ device {
                 config_pri_assets \
                 config_pri_source_group1
         } else {
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/qt4) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
+
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/qt4) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
+
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
@@ -54,6 +60,8 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/Lista.hpp) \
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
+
+INCLUDEPATH += $$quote($$BASEDIR/src)
 
 CONFIG += precompile_header
 
