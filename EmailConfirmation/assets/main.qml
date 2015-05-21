@@ -20,12 +20,17 @@ Page {
     attachedObjects: [
         SettingsPage {
             id:settingsPage
+        },
+        ComponentDefinition {
+            id: mRegisterFactory
+            Register {
+            }
         }
     ]
     titleBar: TitleBar {
         title: "Auto Email Confirmeds"
         acceptAction: ActionItem {
-            imageSource: "asset:///images/icon-gadget-medium.png"
+            imageSource: "asset:///images/ic_settings.png"
             onTriggered: {
                 settingsPage.open()
                 
@@ -33,6 +38,17 @@ Page {
 
         }
     }
+    actions: [
+        ActionItem {
+            title: "Add Account"
+            imageSource: "asset:///images/ic_add.png"
+            ActionBar.placement: ActionBarPlacement.OnBar
+            onTriggered: {
+                var registerObject = mRegisterFactory.createObject();
+                registerObject.open();
+            }
+        }
+    ]
     Container {
         layout: DockLayout {
             

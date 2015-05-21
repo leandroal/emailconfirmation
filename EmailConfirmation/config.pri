@@ -42,10 +42,13 @@ simulator {
 
 config_pri_assets {
     OTHER_FILES += \
+        $$quote($$BASEDIR/assets/Register.qml) \
         $$quote($$BASEDIR/assets/SettingsPage.qml) \
         $$quote($$BASEDIR/assets/images/IMG_20150502_201042.png) \
         $$quote($$BASEDIR/assets/images/IMG_20150502_201045.png) \
         $$quote($$BASEDIR/assets/images/Sync.png) \
+        $$quote($$BASEDIR/assets/images/ic_add.png) \
+        $$quote($$BASEDIR/assets/images/ic_settings.png) \
         $$quote($$BASEDIR/assets/images/icon-gadget-medium.png) \
         $$quote($$BASEDIR/assets/main.qml)
 }
@@ -53,11 +56,13 @@ config_pri_assets {
 config_pri_source_group1 {
     SOURCES += \
         $$quote($$BASEDIR/src/Lista.cpp) \
+        $$quote($$BASEDIR/src/NetworkManager.cpp) \
         $$quote($$BASEDIR/src/applicationui.cpp) \
         $$quote($$BASEDIR/src/main.cpp)
 
     HEADERS += \
         $$quote($$BASEDIR/src/Lista.hpp) \
+        $$quote($$BASEDIR/src/NetworkManager.h) \
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
 

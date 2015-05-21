@@ -36,9 +36,8 @@ MessageHandler::MessageHandler() :
     if (!m_accountList.isEmpty()) {
         m_currentAccount = m_accountList.first();
         for(int i = 0; i < m_accountList.size(); i++){
-        listAccounts << m_accountList.at(i).displayName();
+            listAccounts << m_accountList.at(i).displayName();
         }
-
     }
     QSettings settingsEmail("EmailConfirmation","listItem");
     settingsEmail.setValue("accounts", listAccounts);
