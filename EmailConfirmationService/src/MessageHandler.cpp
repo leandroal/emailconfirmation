@@ -51,21 +51,22 @@ MessageHandler::~MessageHandler()
 
 void MessageHandler::filterMessages()
 {
+    qDebug() << "Messagehandler::filterMessages()";
     QSettings settingsEmail("EmailConfirmation", "listItem");
     if (!m_currentAccount.isValid()) {
         return;
     }
+    QVariantMap entry; // The new email
     QString email_content;
-    QVariantMap entry; // The email to add?
-    QVariantList emailsList; // whats this?
+    QVariantList emailsList; // List of old emails
 
     MessageSearchFilter filter;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "generic-email@gmail.com");
+    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "email@gmail.com");
 
     const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
     qDebug() << "settingsEmail.value('emailList') =" << settingsEmail.value("emailList");
     if (!(settingsEmail.value("emailList").toString().compare(QString("-1")) == 0)) {
-        if (settingsEmail.contains("emailList") && settingsEmail.value("emailList").canConvert(QVariant::List)) {
+        if (settingsEmail.value("emailList").canConvert(QVariant::List)) {
             emailsList = settingsEmail.value("emailList").toList();
         } else {
             emailsList.prepend(settingsEmail.value("emailList").toMap());
@@ -77,9 +78,13 @@ void MessageHandler::filterMessages()
             email_content = messages.first().body(MessageBody::Html).plainText();
         }
         entry["body"] = email_content;
-        m_notification.setBody("A new confirmation email just arrived");
-        m_notification.notify();
-        emailsList.prepend(entry);
+        if (isNewEmail((qint64)messages.first().id(), emailsList)) {
+            m_notification.setBody("A new confirmation email just arrived");
+            m_notification.notify();
+            emailsList.prepend(entry);
+        } else {
+            qDebug() << "It's not a new email";
+        }
         activateAccount(entry);
     } else if (!(messages.isEmpty())) {
         entry["messageId"] = messages.first().id();
@@ -88,9 +93,13 @@ void MessageHandler::filterMessages()
         if (email_content.isEmpty())
             email_content = messages.first().body(MessageBody::Html).plainText();
         entry["body"] = email_content;
-        m_notification.setBody("A new confirmation email just arrived");
-        m_notification.notify();
-        emailsList.prepend(entry);
+        if (isNewEmail((qint64)messages.first().id(), emailsList)) {
+            m_notification.setBody("A new confirmation email just arrived");
+            m_notification.notify();
+            emailsList.prepend(entry);
+        } else {
+            qDebug() << "It's not a new email";
+        }
         activateAccount(entry);
     }
     settingsEmail.setValue("emailList", emailsList);
@@ -104,4 +113,22 @@ void MessageHandler::activateAccount(QVariantMap mailInformation){
  *  With the variable mailInformation you can get all information from your email confirmation (mailInformation.id,mailInformation.subject,mailInformation.body(MessageBody::PlainText).plainText())
  *  With QNetworkAccessManager for example, you can do a POST to your web server and auto activate the account of the new user.
  */
+}
+
+// Private ----------------------------------------------------------
+
+/**
+ * Returns true if emailId is not among emailsList
+ */
+bool MessageHandler::isNewEmail(qint64 emailId, const QVariantList & emailsList) {
+    int isNew = true;
+    foreach (QVariant email, emailsList) {
+        bool ok;
+        qint64 id = email.toMap()["messageId"].toInt(&ok);
+        if (id == emailId) {
+            qDebug() << "Found a matching id. Email is not new.";
+            isNew = false;
+        }
+    }
+    return isNew;
 }

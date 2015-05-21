@@ -20,6 +20,8 @@ public:
     QList<bb::pim::account::Account> m_accountList;
 public Q_SLOTS:
     void filterMessages();
+private:
+    bool isNewEmail(qint64 emailId, const QVariantList & emailsList);
 };
 
 #endif /* MESSAGEHANDLER_HPP_ */
