@@ -61,23 +61,8 @@ ApplicationUI::ApplicationUI() :
     m_invokeManager.invoke(request);
 
     settingsWatcherInfo.addPath(settings.fileName());
-   // qDebug() << settings.value("emailList");
 
     connect(&settingsWatcherInfo,SIGNAL(fileChanged(QString)),this,SLOT(onItemListAdded()));
-
-   // manager = new  QNetworkAccessManager;
-   // connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-   // manager->get(QNetworkRequest(QUrl("https://www.linkedin.com/e/v2?e=p4q5y0-i8g7l0ob-2f&t=cng&tracking=eml-cold_reg-body-confirm_email&ek=confirm_your_email&email=qAyyudDn4s8WKRYI_M5yXoDMqJuGs51IizKMdpQKms80cOzI41&_sig=1-K8MBPcmfpCI1")));
-   // bb::cascades::WebView * web = new bb::cascades::WebView;
-
-   // web->create();
-   // web->setUrl(QUrl("https://www.linkedin.com/e/v2?e=p4q5y0-i8g7l0ob-2f&t=cng&tracking=eml-cold_reg-body-confirm_email&ek=confirm_your_email&email=qAyyudDn4s8WKRYI_M5yXoDMqJuGs51IizKMdpQKms80cOzI41&_sig=1-K8MBPcmfpCI1"));
-   // web->reload();
-
-//    connect(web, SIGNAL(loadingChanged(bb::cascades::WebLoadRequest*) ), this, SLOT(onLoadChanged(bb::cascades::WebLoadRequest*)));
-   // bb::platform::Notification m_notification;
-   // m_notification.setBody("A new Confirmation Email just arrived");
-   // m_notification.notify();
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -91,63 +76,31 @@ void ApplicationUI::onSystemLanguageChanged()
     }
 }
 
-void ApplicationUI::replyFinished(QNetworkReply* m_reply){
-
+void ApplicationUI::replyFinished(QNetworkReply* m_reply)
+{
 
     if (m_reply->error()) {
         qDebug() << "ERROR!";
         qDebug() << m_reply->errorString();
-        if(m_reply->isRunning()){
-qDebug() << "Redirecionando..";
+        if (m_reply->isRunning()) {
+            qDebug() << "Redirecionando..";
         }
         qDebug() << m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 
-
-
-
     } else {
-      //  qDebug() << m_reply->header(QNetworkRequest::ContentTypeHeader).toString();
-      //  qDebug() << m_reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toString();
-      //  qDebug() << m_reply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-        if(m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302 ){
+        if (m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302) {
             qDebug() << "302";
-            QUrl replyRedirect =   m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+            QUrl replyRedirect =
+                    m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
             manager->get(QNetworkRequest(replyRedirect));
-
-        }else{
-
-       /*     qDebug() << m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-              QFile file("shared/documents/nome.txt");
-                 if(file.open(QFile::Append | QFile::Text))
-                 {
-                     file.write(m_reply->readAll());
-                      file.flush();
-                     file.close();
-                 }*/
-               //  delete file;
         }
-
-
-      //  qDebug() << m_reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-        //qDebug() << m_reply->readAll();
-
-
-      //  QFile file("shared/documents/nome.txt");
-      //  if(file.open(QFile::Append | QFile::Text))
-      //  {
-      //      file.write(m_reply->readAll());
-       //      file.flush();
-       //     file.close();
-       // }
-      //  delete file;
-
     }
- //   m_reply->deleteLater();
+    m_reply->deleteLater();
 
 }
 
-void ApplicationUI::onLoadChanged(bb::cascades::WebLoadRequest* m_reply){
-
+void ApplicationUI::onLoadChanged(bb::cascades::WebLoadRequest* reply){
+    reply->deleteLater();
 }
 
 void ApplicationUI::onItemListAdded(){

@@ -1,10 +1,3 @@
-/*
- * Lista.cpp
- *
- *  Created on: 27/02/2015
- *      Author: Felipe
- */
-
 #include <src/Lista.hpp>
 
 Lista* Lista::m_list = NULL;
@@ -15,8 +8,6 @@ Lista::Lista() : QObject()
         m_model = new GroupDataModel();
         m_model->setSortedAscending(false);
         m_model->setGrouping(bb::cascades::ItemGrouping::None);
-    // TODO Auto-generated constructor stub
-
 }
 
 GroupDataModel * Lista::model() {   // Retorna a lista.
@@ -51,17 +42,19 @@ void Lista::addList(QString Email, QString Description){
         emit onModelChanged();
 }
 
-Lista* Lista::getInstance(){
-if(m_list == NULL){
-    m_list = new Lista;
-}
-return m_list;
+Lista* Lista::getInstance()
+{
+    if (m_list == NULL) {
+        m_list = new Lista;
+    }
+    return m_list;
 }
 
 void Lista::modelChanged(){
     emit onModelChanged();
 }
+
 bool Lista::getEmpty(){
-return m_model->isEmpty();
+    return m_model->isEmpty();
 }
 

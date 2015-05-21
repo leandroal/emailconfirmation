@@ -1,10 +1,3 @@
-/*
- * MessageHandler.hpp
- *
- *  Created on: 30/03/2015
- *      Author: gualberto
- */
-
 #ifndef MESSAGEHANDLER_HPP_
 #define MESSAGEHANDLER_HPP_
 #include <QObject>
@@ -24,10 +17,8 @@ public:
     bb::pim::account::Account m_currentAccount;
     bb::platform::Notification m_notification;
     void activateAccount(QVariantMap);
-
     QList<bb::pim::account::Account> m_accountList;
-
-  public Q_SLOTS:
+public Q_SLOTS:
     void filterMessages();
 };
 

@@ -18,10 +18,10 @@
 
 using namespace bb;
 
-void myMessageOutput(QtMsgType type, const char* msg) {
-    fprintf(stdout, "%s\n", msg);
-    fflush (stdout);
-}
+//void myMessageOutput(QtMsgType type, const char* msg) {
+//    fprintf(stdout, "%s\n", msg);
+//    fflush (stdout);
+//}
 
 int main(int argc, char **argv)
 {
@@ -33,5 +33,5 @@ int main(int argc, char **argv)
 
     // Enter the application main event loop.
     return Application::exec();
-    qInstallMsgHandler(myMessageOutput);
+//    qInstallMsgHandler(myMessageOutput);
 }
