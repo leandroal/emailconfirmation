@@ -52,61 +52,53 @@ MessageHandler::~MessageHandler()
 void MessageHandler::filterMessages()
 {
     QSettings settingsEmail("EmailConfirmation", "listItem");
-    if (!m_currentAccount.isValid())
+    if (!m_currentAccount.isValid()) {
         return;
+    }
+    QString email_content;
+    QVariantMap entry; // The email to add?
+    QVariantList emailsList; // whats this?
 
-    QString m_body;
-    QVariantMap entry;
     MessageSearchFilter filter;
-    QVariantList emailList;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress,
-            "automailconfirmationblackberry@gmail.com");
+    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "generic-email@gmail.com");
 
-    const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey,
-            filter);
-    qDebug() << settingsEmail.value("emailList");
+    const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
+    qDebug() << "settingsEmail.value('emailList') =" << settingsEmail.value("emailList");
     if (!(settingsEmail.value("emailList").toString().compare(QString("-1")) == 0)) {
-        qDebug() << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        if (settingsEmail.value("emailList").canConvert(QVariant::List)) {
-            qDebug() << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
-            emailList = settingsEmail.value("emailList").toList(); //TODO mudar nome historic
-
-        }
-
-        else {
-            qDebug() << "ccccccccccccccccccccccccccccccccccccccc";
-            emailList.prepend(settingsEmail.value("emailList").toMap());
+        if (settingsEmail.contains("emailList") && settingsEmail.value("emailList").canConvert(QVariant::List)) {
+            emailsList = settingsEmail.value("emailList").toList();
+        } else {
+            emailsList.prepend(settingsEmail.value("emailList").toMap());
         }
         entry["messageId"] = messages.first().id();
         entry["subject"] = messages.first().subject();
-        m_body = messages.first().body(MessageBody::PlainText).plainText();
-        if (m_body.isEmpty())
-            m_body = messages.first().body(MessageBody::Html).plainText();
-        entry["body"] = m_body;
-        m_notification.setBody("A new Confirmation Email just arrived");
-        m_notification.notify();
-        emailList.prepend(entry);
-        activateAccount(entry);
-        qDebug() << "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-    } else {
-        if (!(messages.isEmpty())) {
-            qDebug() << "fffffffffffffffffffffffffffffffffff";
-            entry["messageId"] = messages.first().id();
-            entry["subject"] = messages.first().subject();
-            m_body = messages.first().body(MessageBody::PlainText).plainText();
-            if (m_body.isEmpty())
-                m_body = messages.first().body(MessageBody::Html).plainText();
-            entry["body"] = m_body;
-            m_notification.setBody("A new Confirmation Email just arrived");
-            m_notification.notify();
-            emailList.prepend(entry);
-            activateAccount(entry);
+        email_content = messages.first().body(MessageBody::PlainText).plainText();
+        if (email_content.isEmpty()) {
+            email_content = messages.first().body(MessageBody::Html).plainText();
         }
+        entry["body"] = email_content;
+        m_notification.setBody("A new confirmation email just arrived");
+        m_notification.notify();
+        emailsList.prepend(entry);
+        activateAccount(entry);
+    } else if (!(messages.isEmpty())) {
+        entry["messageId"] = messages.first().id();
+        entry["subject"] = messages.first().subject();
+        email_content = messages.first().body(MessageBody::PlainText).plainText();
+        if (email_content.isEmpty())
+            email_content = messages.first().body(MessageBody::Html).plainText();
+        entry["body"] = email_content;
+        m_notification.setBody("A new confirmation email just arrived");
+        m_notification.notify();
+        emailsList.prepend(entry);
+        activateAccount(entry);
     }
-    settingsEmail.setValue("emailList", emailList);
+    settingsEmail.setValue("emailList", emailsList);
+    settingsEmail.sync();
 }
 
 void MessageHandler::activateAccount(QVariantMap mailInformation){
+    Q_UNUSED(mailInformation);
 /*
  *  Put here your code to automatically activate the email
  *  With the variable mailInformation you can get all information from your email confirmation (mailInformation.id,mailInformation.subject,mailInformation.body(MessageBody::PlainText).plainText())

@@ -46,14 +46,14 @@ ApplicationUI::ApplicationUI() :
     AbstractPane *root = qml->createRootObject<AbstractPane>();
     Application::instance()->setScene(root);
     qml->setContextProperty("_appUI", this);
-    qml->setContextProperty("_list",Lista::getInstance());settingsWatcherInfo.addPath(settings.fileName());
+    qml->setContextProperty("_list",Lista::getInstance());
+    settingsWatcherInfo.addPath(settings.fileName());
 
     if(!(settings.contains("emailList"))){
-        qDebug() << "nao tem nada";
-        settings.setValue("emailList","-1"); // iF not exist create a empty variant
+        qDebug() << "emailList settings doesn't exist. Creating...";
+        settings.setValue("emailList", "-1"); // If doesn't exist, creates an empty variant
+        settings.sync();
     }
-
-
 
     bb::system::InvokeRequest request;
     request.setTarget("com.example.EmailConfirmationService");

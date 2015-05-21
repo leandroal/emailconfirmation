@@ -13,6 +13,9 @@ class Lista : public QObject
     Q_PROPERTY(bool isEmpty READ getEmpty NOTIFY emptyChanged);
 public:
     virtual ~Lista();
+    /**
+     * Returns the list
+     */
     Q_INVOKABLE GroupDataModel * model();
     Q_INVOKABLE bool getEmpty();
     Q_INVOKABLE void addList(QString Email, QString Description );
