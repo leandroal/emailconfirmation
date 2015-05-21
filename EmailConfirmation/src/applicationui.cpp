@@ -43,10 +43,10 @@ ApplicationUI::ApplicationUI() :
     Q_UNUSED(res);
     onSystemLanguageChanged();
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
-    AbstractPane *root = qml->createRootObject<AbstractPane>();
-    Application::instance()->setScene(root);
     qml->setContextProperty("_appUI", this);
     qml->setContextProperty("_list",Lista::getInstance());
+    AbstractPane *root = qml->createRootObject<AbstractPane>();
+    Application::instance()->setScene(root);
     settingsWatcherInfo.addPath(settings.fileName());
 
     if(!(settings.contains("emailList"))){
