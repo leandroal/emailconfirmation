@@ -17,11 +17,6 @@ ApplicationHeadless::ApplicationHeadless()
     , m_invokeManager(new InvokeManager(this))
 {
     QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
-
-
-    m_messagehandler = new MessageHandler;
-
-
 }
 
 void ApplicationHeadless::onInvoked(const bb::system::InvokeRequest& request)
@@ -34,7 +29,7 @@ void ApplicationHeadless::onInvoked(const bb::system::InvokeRequest& request)
         // ??
     }
     if (request.action().compare("teste") == 0) {
-        m_messagehandler->filterMessages();
+        m_messagehandler.filterMessages();
     }
 
 }

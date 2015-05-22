@@ -59,11 +59,13 @@ simulator {
 config_pri_source_group1 {
     SOURCES += \
         $$quote($$BASEDIR/src/MessageHandler.cpp) \
+        $$quote($$BASEDIR/src/NetworkManager.cpp) \
         $$quote($$BASEDIR/src/applicationheadless.cpp) \
         $$quote($$BASEDIR/src/main.cpp)
 
     HEADERS += \
         $$quote($$BASEDIR/src/MessageHandler.hpp) \
+        $$quote($$BASEDIR/src/NetworkManager.h) \
         $$quote($$BASEDIR/src/applicationheadless.hpp)
 }
 
