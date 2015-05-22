@@ -1,10 +1,3 @@
-/*
- * NetworkManager.cpp
- *
- *  Created on: 21/05/2015
- *      Author: dielson
- */
-
 #include <QDebug>
 
 #include "NetworkManager.h"

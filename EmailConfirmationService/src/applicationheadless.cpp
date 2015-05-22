@@ -29,7 +29,7 @@ void ApplicationHeadless::onInvoked(const bb::system::InvokeRequest& request)
         // ??
     }
     if (request.action().compare("teste") == 0) {
-        m_messagehandler.filterMessages();
+//        m_messagehandler.filterMessages();
     }
 
 }

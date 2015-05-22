@@ -38,8 +38,6 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
         qDebug() << "Reply url match the request";
         qDebug() << "Error was" << reply->errorString();
     } else {
-        QString lastUrl = m_urls.pop();
-        Q_ASSERT(reply->request().url() == QUrl(lastUrl)); // just to make sure
         qWarning() << "Reply url doesn't match the request!!!";
         qDebug() << "Error was" << reply->errorString();
     }

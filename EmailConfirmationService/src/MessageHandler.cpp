@@ -18,13 +18,11 @@ MessageHandler::MessageHandler() :
 
     m_messageService = new MessageService();
 
-    bool ok = connect(m_messageService, SIGNAL(messagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)), SLOT(filterMessages()));
+    bool ok = connect(m_messageService, SIGNAL(messagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)), this, SLOT(onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)));
     Q_ASSERT(ok);
-    ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), SLOT(filterMessages()));
+    ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
     Q_ASSERT(ok);
-    ok = connect(m_messageService, SIGNAL(messageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate)), SLOT(filterMessages()));
-    Q_ASSERT(ok);
-    ok = connect(m_messageService, SIGNAL(messageRemoved(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, QString)), SLOT(filterMessages()));
+    ok = connect(m_messageService, SIGNAL(messageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate)), this, SLOT(onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate)));
     Q_ASSERT(ok);
 
     NotificationDefaultApplicationSettings * settings = new NotificationDefaultApplicationSettings;
@@ -48,7 +46,7 @@ MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::filterMessages()
+void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)
 {
     qDebug() << "Messagehandler::filterMessages()";
     QSettings settingsEmail("EmailConfirmation", "listItem");
@@ -60,9 +58,16 @@ void MessageHandler::filterMessages()
     QVariantList emailsList; // List of old emails
 
     MessageSearchFilter filter;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "email@gmail.com");
+    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "dielsonscarvalho@gmail.com");
 
     const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
+    foreach (Message msg, messages) {
+        if (msg.isInbound()) {
+            qDebug() << "Message is inbound:" << msg.subject();
+        } else {
+            qDebug() << "Message's not inboud:" << msg.subject();
+        }
+    }
     qDebug() << "settingsEmail.value('emailList') =" << settingsEmail.value("emailList");
     if (!(settingsEmail.value("emailList").toString().compare(QString("-1")) == 0)) {
         if (settingsEmail.value("emailList").canConvert(QVariant::List)) {
@@ -103,6 +108,14 @@ void MessageHandler::filterMessages()
     }
     settingsEmail.setValue("emailList", emailsList);
     settingsEmail.sync();
+}
+
+void MessageHandler::onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate) {
+    // Do nothing meanwhile
+}
+
+void MessageHandler::onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>) {
+    // Do nothing meanwhile
 }
 
 void MessageHandler::activateAccount(QVariantMap mailInformation){
