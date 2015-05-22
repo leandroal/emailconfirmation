@@ -44,6 +44,7 @@ ApplicationUI::ApplicationUI() :
     onSystemLanguageChanged();
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
     qml->setContextProperty("_appUI", this);
+    qml->setContextProperty("_networkManager", &m_networkManager);
     qml->setContextProperty("_list",Lista::getInstance());
     AbstractPane *root = qml->createRootObject<AbstractPane>();
     Application::instance()->setScene(root);

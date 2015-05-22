@@ -2,10 +2,10 @@
 9
 SettingsPage.qml
 main.qml
-images/ic_add.png
-images/IMG_20150502_201045.png
-images/IMG_20150502_201042.png
-images/icon-gadget-medium.png
-images/Sync.png
-images/ic_settings.png
 Register.qml
+images/IMG_20150502_201045.png
+images/Sync.png
+images/icon-gadget-medium.png
+images/ic_settings.png
+images/IMG_20150502_201042.png
+images/ic_add.png

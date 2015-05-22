@@ -11,6 +11,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QStack>
 
 class NetworkManager: public QObject
 {
@@ -19,7 +20,7 @@ public:
     static QUrl ACCOUNT_URL;
     NetworkManager();
     virtual ~NetworkManager();
-    void createAccount(QString email, QString password);
+    Q_INVOKABLE void submit(QString email, QString password);
 public slots:
     void onFinished(QNetworkReply*);
 private:

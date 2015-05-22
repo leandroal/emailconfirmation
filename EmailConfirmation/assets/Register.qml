@@ -7,6 +7,9 @@ Sheet {
             title: qsTr("Adding Account")
             acceptAction: ActionItem {
                 title: qsTr("Submit")
+                onTriggered: {
+                    _networkManager.submit(emailField.text, passwordField.text);
+                }
             }
             dismissAction: ActionItem {
                 title: qsTr("Cancel")
@@ -25,6 +28,7 @@ Sheet {
                     text: qsTr("Email")
                 }
                 TextField {
+                    id: emailField
                     hintText: qsTr("Type your email")
                     inputMode: TextFieldInputMode.EmailAddress
                 }
@@ -32,6 +36,7 @@ Sheet {
                     text: qsTr("Password")
                 }
                 TextField {
+                    id: passwordField
                     hintText: qsTr("Type your password")
                     inputMode: TextFieldInputMode.Password
                 }

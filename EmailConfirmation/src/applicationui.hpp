@@ -25,6 +25,8 @@
 #include <bb/system/InvokeRequest>
 #include <bb/system/InvokeManager>
 
+#include "NetworkManager.h"
+
 namespace bb
 {
     namespace cascades
@@ -59,6 +61,7 @@ private:
     bb::cascades::LocaleHandler* m_pLocaleHandler;
     QFileSystemWatcher settingsWatcherInfo;
     bb::system::InvokeManager  m_invokeManager;
+    NetworkManager m_networkManager;
 };
 
 #endif /* ApplicationUI_HPP_ */
