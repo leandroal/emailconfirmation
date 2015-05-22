@@ -46,10 +46,10 @@ MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)
+void MessageHandler::onMessageAdded(bb::pim::account::AccountKey accountKey, bb::pim::message::ConversationKey conversationKey, bb::pim::message::MessageKey messageKey)
 {
     qDebug() << "Messagehandler::filterMessages()";
-    QSettings settingsEmail("EmailConfirmation", "listItem");
+    // QSettings settingsEmail("EmailConfirmation", "listItem");
     if (!m_currentAccount.isValid()) {
         return;
     }
@@ -58,56 +58,30 @@ void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::messa
     QVariantList emailsList; // List of old emails
 
     MessageSearchFilter filter;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "dielsonscarvalho@gmail.com");
+    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "email@gmail.com");
 
     const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
     foreach (Message msg, messages) {
-        if (msg.isInbound()) {
-            qDebug() << "Message is inbound:" << msg.subject();
-        } else {
-            qDebug() << "Message's not inboud:" << msg.subject();
-        }
-    }
-    qDebug() << "settingsEmail.value('emailList') =" << settingsEmail.value("emailList");
-    if (!(settingsEmail.value("emailList").toString().compare(QString("-1")) == 0)) {
-        if (settingsEmail.value("emailList").canConvert(QVariant::List)) {
-            emailsList = settingsEmail.value("emailList").toList();
-        } else {
-            emailsList.prepend(settingsEmail.value("emailList").toMap());
-        }
-        entry["messageId"] = messages.first().id();
-        entry["subject"] = messages.first().subject();
-        email_content = messages.first().body(MessageBody::PlainText).plainText();
-        if (email_content.isEmpty()) {
-            email_content = messages.first().body(MessageBody::Html).plainText();
-        }
-        entry["body"] = email_content;
-        if (isNewEmail((qint64)messages.first().id(), emailsList)) {
+        if (msg.isInbound() && msg.id() == messageKey) {
+            qDebug() << "Message inbound:" << msg.subject();
+            QVariantMap entry;
+            entry["messageId"] = msg.id();
+            entry["subject"] = msg.subject();
+            QString emailContent = msg.body(MessageBody::PlainText).plainText();
+            if (emailContent.isEmpty()) {
+                emailContent = msg.body(MessageBody::Html).plainText();
+            }
+            entry["body"] = emailContent;
             m_notification.setBody("A new confirmation email just arrived");
             m_notification.notify();
+
+            QSettings settings("EmailConfirmation", "listItem");
+            QVariantList emailsList = settings.value("emailList", QVariantList()).toList();
             emailsList.prepend(entry);
-        } else {
-            qDebug() << "It's not a new email";
+            settings.setValue("emailList", emailsList);
+            settings.sync();
         }
-        activateAccount(entry);
-    } else if (!(messages.isEmpty())) {
-        entry["messageId"] = messages.first().id();
-        entry["subject"] = messages.first().subject();
-        email_content = messages.first().body(MessageBody::PlainText).plainText();
-        if (email_content.isEmpty())
-            email_content = messages.first().body(MessageBody::Html).plainText();
-        entry["body"] = email_content;
-        if (isNewEmail((qint64)messages.first().id(), emailsList)) {
-            m_notification.setBody("A new confirmation email just arrived");
-            m_notification.notify();
-            emailsList.prepend(entry);
-        } else {
-            qDebug() << "It's not a new email";
-        }
-        activateAccount(entry);
     }
-    settingsEmail.setValue("emailList", emailsList);
-    settingsEmail.sync();
 }
 
 void MessageHandler::onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate) {
