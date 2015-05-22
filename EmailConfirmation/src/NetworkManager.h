@@ -12,11 +12,18 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-class NetworkManager
+class NetworkManager: public QObject
 {
+    Q_OBJECT
 public:
+    static QUrl ACCOUNT_URL;
     NetworkManager();
     virtual ~NetworkManager();
+    void createAccount(QString email, QString password);
+public slots:
+    void onFinished(QNetworkReply*);
+private:
+    QNetworkAccessManager m_netManager;
 };
 
 #endif /* NETWORKMANAGER_H_ */
