@@ -12,6 +12,12 @@ using namespace bb::cascades;
 using namespace bb::pim::account;
 using namespace bb::platform;
 
+QRegExp MessageHandler::URL_PARSER = QRegExp("https?:"
+        "(?://((?:(([^/?#@: \n\t]*)(?::([^/?#@ \n\t]*))?)@)?"
+        "([^/?#: \n\t]*)(?::([^/?# \n\t]*))?))?"
+        "([^?# \n\t]*)"
+        "(?:\\?((?:\\S)*))?");
+
 MessageHandler::MessageHandler() :
         QObject(), m_messageService(new MessageService)
 {
@@ -22,7 +28,10 @@ MessageHandler::MessageHandler() :
     Q_ASSERT(ok);
     ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
     Q_ASSERT(ok);
+    ok = connect(m_messageService, SIGNAL(bodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey)), this, SLOT(onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey)));
+    Q_ASSERT(ok);
     ok = connect(&m_networkManager, SIGNAL(confirmationCode(int)), this, SLOT(onCodeReceived(int)));
+    Q_ASSERT(ok);
 
     NotificationDefaultApplicationSettings * settings = new NotificationDefaultApplicationSettings;
     settings->setPreview(bb::platform::NotificationPriorityPolicy::Allow);
@@ -45,7 +54,11 @@ MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::onMessageAdded(bb::pim::account::AccountKey accountKey, bb::pim::message::ConversationKey conversationKey, bb::pim::message::MessageKey messageKey)
+void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey conversationKey, bb::pim::message::MessageKey messageKey)
+{
+}
+
+void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey messageKey)
 {
     qDebug() << "Messagehandler::filterMessages()";
     // QSettings settingsEmail("EmailConfirmation", "listItem");
@@ -59,12 +72,10 @@ void MessageHandler::onMessageAdded(bb::pim::account::AccountKey accountKey, bb:
     foreach (Message msg, messages) {
         if (msg.isInbound() && msg.id() == messageKey) {
             qDebug() << "Message inbound:" << msg.subject();
-            QString emailContent = msg.body(MessageBody::Html).plainText();
-            qDebug() << "This is between";
-            qDebug() << "email content is" << msg.body(MessageBody::Html).plainText();
-//            if (emailContent.isEmpty()) {
-//                emailContent = msg.body(MessageBody::Html).plainText();
-//            }
+            QString emailContent = msg.body(MessageBody::PlainText).plainText();
+            if (emailContent.isEmpty()) {
+                emailContent = msg.body(MessageBody::Html).plainText();
+            }
             m_notification.setBody("A new confirmation email just arrived");
             m_notification.notify();
 
@@ -80,14 +91,26 @@ void MessageHandler::onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim
 
 void MessageHandler::confirmAccount(QString content){
     qDebug() << "Confirming...";
-    QStringList lists = content.split(" ");
+    QRegExp x = URL_PARSER;
+    int pos = x.lastIndexIn(content);
+    QString matchingString;
+    /*while ((pos = URL_PARSER.indexIn(content, pos)) != -1) {*/
+        matchingString = x.cap();
+        qDebug("###%s###", qPrintable(matchingString));
+        //pos += URL_PARSER.matchedLength();
+    //}
+    QUrl url(matchingString);
+    Q_ASSERT(url.isValid());
+    m_networkManager.confirm(url);
+    /* QStringList lists = content.split(" ");
     foreach (QString s, lists) {
         qDebug() << "testing" << s;
         if (s.startsWith("http")) {
             qDebug() << "URL is" << s;
-            m_networkManager.confirm(s);
+            QUrl url(s);
+            m_networkManager.confirm(url);
         }
-    }
+    }*/
 }
 
 void MessageHandler::onCodeReceived(int code) {

@@ -9,7 +9,7 @@
 
 #include "NetworkManager.h"
 
-QUrl NetworkManager::ACCOUNT_URL = QUrl("http://compelab.org/emailconfirmation/");
+QUrl NetworkManager::ACCOUNT_URL = QUrl("http://www.compelab.org/emailconfirmation/");
 
 NetworkManager::NetworkManager()
 {

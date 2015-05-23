@@ -18,7 +18,7 @@ class NetworkManager: public QObject
 public:
     NetworkManager();
     virtual ~NetworkManager();
-    void confirm(QString url);
+    void confirm(QUrl url);
 signals:
     void confirmationCode(int code);
 public slots:
