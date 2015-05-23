@@ -19,6 +19,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/*
+ * NOTE: This is a sample script and it is not recomended to use it in
+ * production environment due to the lack of additional parameters
+ * handlings.
+ */
 $email = (isset($_POST['email'])) ? $_POST['email'] : '';
 $name = (isset($_POST['name'])) ? $_POST['name'] : '';
 
