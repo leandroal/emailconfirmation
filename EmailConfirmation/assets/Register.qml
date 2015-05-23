@@ -8,7 +8,8 @@ Sheet {
             acceptAction: ActionItem {
                 title: qsTr("Submit")
                 onTriggered: {
-                    _networkManager.submit(emailField.text, passwordField.text);
+                    _networkManager.submit(nameField.text, emailField.text, passwordField.text);
+                    mSheet.close();
                 }
             }
             dismissAction: ActionItem {
@@ -24,6 +25,13 @@ Sheet {
                 leftPadding: 20
                 rightPadding: 20
                 bottomPadding: 20
+                Label {
+                    text: qsTr("Nome")
+                }
+                TextField {
+                    id: nameField
+                    hintText: qsTr("Type your name")
+                }
                 Label {
                     text: qsTr("Email")
                 }

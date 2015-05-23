@@ -31,5 +31,13 @@
         <source>Adding Account</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Nome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type your name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

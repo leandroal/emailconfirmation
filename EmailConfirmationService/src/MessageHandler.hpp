@@ -7,6 +7,8 @@
 #include <bb/platform/Notification>
 #include <bb/platform/NotificationDefaultApplicationSettings>
 
+#include "NetworkManager.h"
+
 class MessageHandler : public QObject
 {
     Q_OBJECT
@@ -16,16 +18,14 @@ public:
     bb::pim::message::MessageService* m_messageService;
     bb::pim::account::Account m_currentAccount;
     bb::platform::Notification m_notification;
-    void activateAccount(QVariantMap);
+    void confirmAccount(QString);
     QList<bb::pim::account::Account> m_accountList;
 public Q_SLOTS:
     void onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>);
     void onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey);
-    void onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate);
-//    void checkEmail(bb::pim::message::MessageKey);
-//    void checkManyEmails(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>);
+    void onCodeReceived(int code);
 private:
-    bool isNewEmail(qint64 emailId, const QVariantList & emailsList);
+    NetworkManager m_networkManager;
 };
 
 #endif /* MESSAGEHANDLER_HPP_ */

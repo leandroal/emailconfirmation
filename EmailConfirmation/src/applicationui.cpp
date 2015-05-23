@@ -26,7 +26,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QNetworkReply>
-#include "Lista.hpp"
+//#include "Lista.hpp"
 #include <bb/platform/Notification>
 #include <bb/platform/NotificationDefaultApplicationSettings>
 
@@ -45,25 +45,23 @@ ApplicationUI::ApplicationUI() :
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
     qml->setContextProperty("_appUI", this);
     qml->setContextProperty("_networkManager", &m_networkManager);
-    qml->setContextProperty("_list",Lista::getInstance());
+    qml->setContextProperty("_status", &m_status);
     AbstractPane *root = qml->createRootObject<AbstractPane>();
     Application::instance()->setScene(root);
-    settingsWatcherInfo.addPath(settings.fileName());
+//    settingsWatcherInfo.addPath(settings.fileName());
+//    if(!(settings.contains("emailList"))){
+//        qDebug() << "emailList settings doesn't exist. Creating...";
+//        settings.setValue("emailList", "-1"); // If doesn't exist, creates an empty variant
+//        settings.sync();
+//    }
 
-    if(!(settings.contains("emailList"))){
-        qDebug() << "emailList settings doesn't exist. Creating...";
-        settings.setValue("emailList", "-1"); // If doesn't exist, creates an empty variant
-        settings.sync();
-    }
+//    bb::system::InvokeRequest request;
+//    request.setTarget("com.example.EmailConfirmationService");
+//    request.setAction("teste");
+//    m_invokeManager.invoke(request);
 
-    bb::system::InvokeRequest request;
-    request.setTarget("com.example.EmailConfirmationService");
-    request.setAction("teste");
-    m_invokeManager.invoke(request);
-
-    settingsWatcherInfo.addPath(settings.fileName());
-
-    connect(&settingsWatcherInfo,SIGNAL(fileChanged(QString)),this,SLOT(onItemListAdded()));
+//    bool connected = connect(&m_settingsWatcherInfo, SIGNAL(fileChanged(QString)), &m_status, SLOT(refresh()));
+//    Q_ASSERT(connected);
 }
 
 void ApplicationUI::onSystemLanguageChanged()
@@ -77,37 +75,6 @@ void ApplicationUI::onSystemLanguageChanged()
     }
 }
 
-void ApplicationUI::replyFinished(QNetworkReply* m_reply)
-{
-
-    if (m_reply->error()) {
-        qDebug() << "ERROR!";
-        qDebug() << m_reply->errorString();
-        if (m_reply->isRunning()) {
-            qDebug() << "Redirecionando..";
-        }
-        qDebug() << m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-
-    } else {
-        if (m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302) {
-            qDebug() << "302";
-            QUrl replyRedirect =
-                    m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-            manager->get(QNetworkRequest(replyRedirect));
-        }
-    }
-    m_reply->deleteLater();
-
-}
-
-void ApplicationUI::onLoadChanged(bb::cascades::WebLoadRequest* reply){
-    reply->deleteLater();
-}
-
-void ApplicationUI::onItemListAdded(){
-  // qDebug() << settings.value("emailList").toList();
-    Lista::getInstance()->modelChanged();
-}
 void ApplicationUI::addElementsDropDown(QObject* element){
     DropDown* dropDown = qobject_cast<DropDown*>(element);
 

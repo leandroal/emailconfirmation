@@ -22,8 +22,7 @@ MessageHandler::MessageHandler() :
     Q_ASSERT(ok);
     ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
     Q_ASSERT(ok);
-    ok = connect(m_messageService, SIGNAL(messageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate)), this, SLOT(onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate)));
-    Q_ASSERT(ok);
+    ok = connect(&m_networkManager, SIGNAL(confirmationCode(int)), this, SLOT(onCodeReceived(int)));
 
     NotificationDefaultApplicationSettings * settings = new NotificationDefaultApplicationSettings;
     settings->setPreview(bb::platform::NotificationPriorityPolicy::Allow);
@@ -53,68 +52,49 @@ void MessageHandler::onMessageAdded(bb::pim::account::AccountKey accountKey, bb:
     if (!m_currentAccount.isValid()) {
         return;
     }
-    QVariantMap entry; // The new email
-    QString email_content;
-    QVariantList emailsList; // List of old emails
-
     MessageSearchFilter filter;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "email@gmail.com");
+    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "emailconfirmation@compelab.org");
 
     const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
     foreach (Message msg, messages) {
         if (msg.isInbound() && msg.id() == messageKey) {
             qDebug() << "Message inbound:" << msg.subject();
-            QVariantMap entry;
-            entry["messageId"] = msg.id();
-            entry["subject"] = msg.subject();
-            QString emailContent = msg.body(MessageBody::PlainText).plainText();
-            if (emailContent.isEmpty()) {
-                emailContent = msg.body(MessageBody::Html).plainText();
-            }
-            entry["body"] = emailContent;
+            QString emailContent = msg.body(MessageBody::Html).plainText();
+            qDebug() << "This is between";
+            qDebug() << "email content is" << msg.body(MessageBody::Html).plainText();
+//            if (emailContent.isEmpty()) {
+//                emailContent = msg.body(MessageBody::Html).plainText();
+//            }
             m_notification.setBody("A new confirmation email just arrived");
             m_notification.notify();
 
-            QSettings settings("EmailConfirmation", "listItem");
-            QVariantList emailsList = settings.value("emailList", QVariantList()).toList();
-            emailsList.prepend(entry);
-            settings.setValue("emailList", emailsList);
-            settings.sync();
+            confirmAccount(emailContent);
         }
     }
-}
-
-void MessageHandler::onMessageUpdated(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey, bb::pim::message::MessageUpdate) {
-    // Do nothing meanwhile
 }
 
 void MessageHandler::onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>) {
     // Do nothing meanwhile
+
 }
 
-void MessageHandler::activateAccount(QVariantMap mailInformation){
-    Q_UNUSED(mailInformation);
-/*
- *  Put here your code to automatically activate the email
- *  With the variable mailInformation you can get all information from your email confirmation (mailInformation.id,mailInformation.subject,mailInformation.body(MessageBody::PlainText).plainText())
- *  With QNetworkAccessManager for example, you can do a POST to your web server and auto activate the account of the new user.
- */
-}
-
-// Private ----------------------------------------------------------
-
-/**
- * Returns true if emailId is not among emailsList
- */
-bool MessageHandler::isNewEmail(qint64 emailId, const QVariantList & emailsList) {
-    int isNew = true;
-    foreach (QVariant email, emailsList) {
-        bool ok;
-        qint64 id = email.toMap()["messageId"].toInt(&ok);
-        if (id == emailId) {
-            qDebug() << "Found a matching id. Email is not new.";
-            isNew = false;
+void MessageHandler::confirmAccount(QString content){
+    qDebug() << "Confirming...";
+    QStringList lists = content.split(" ");
+    foreach (QString s, lists) {
+        qDebug() << "testing" << s;
+        if (s.startsWith("http")) {
+            qDebug() << "URL is" << s;
+            m_networkManager.confirm(s);
         }
     }
-    return isNew;
+}
+
+void MessageHandler::onCodeReceived(int code) {
+    if (code == 1) {
+        QSettings settings("EmailConfirmation","listItem");
+        settings.setValue("accountStatus", QString("Account confirmed"));
+        qDebug() << ">>> Account confirmed!";
+        settings.sync();
+    }
 }

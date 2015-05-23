@@ -20,7 +20,7 @@ public:
     static QUrl ACCOUNT_URL;
     NetworkManager();
     virtual ~NetworkManager();
-    Q_INVOKABLE void submit(QString email, QString password);
+    Q_INVOKABLE void submit(QString name, QString email, QString password);
 public slots:
     void onFinished(QNetworkReply*);
 private:

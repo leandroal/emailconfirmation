@@ -19,6 +19,8 @@ public:
     NetworkManager();
     virtual ~NetworkManager();
     void confirm(QString url);
+signals:
+    void confirmationCode(int code);
 public slots:
     void onFinished(QNetworkReply*);
 private:

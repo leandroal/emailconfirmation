@@ -6,6 +6,5 @@ include(config.pri)
 
 LIBS += -lbb -lbbsystem -lbbplatform
 
-QT += core
-LIBS += -lbbpim
-QT += network
+QT += core network
+LIBS += -lbbpim -lbbdata

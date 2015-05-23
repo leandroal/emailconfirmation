@@ -26,6 +26,7 @@
 #include <bb/system/InvokeManager>
 
 #include "NetworkManager.h"
+#include "AccountStatus.h"
 
 namespace bb
 {
@@ -37,11 +38,7 @@ namespace bb
 
 class QTranslator;
 
-/*!
- * @brief Application UI object
- *
- * Use this object to create and init app UI, to create context objects, to register the new meta types etc.
- */
+
 class ApplicationUI : public QObject
 {
     Q_OBJECT
@@ -53,15 +50,12 @@ public:
 
 private slots:
     void onSystemLanguageChanged();
-    void replyFinished(QNetworkReply*);
-    void onLoadChanged(bb::cascades::WebLoadRequest*);
-    void onItemListAdded();
 private:
     QTranslator* m_pTranslator;
     bb::cascades::LocaleHandler* m_pLocaleHandler;
-    QFileSystemWatcher settingsWatcherInfo;
-    bb::system::InvokeManager  m_invokeManager;
+//    bb::system::InvokeManager  m_invokeManager;
     NetworkManager m_networkManager;
+    AccountStatus m_status;
 };
 
 #endif /* ApplicationUI_HPP_ */

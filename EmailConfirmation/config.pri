@@ -55,13 +55,13 @@ config_pri_assets {
 
 config_pri_source_group1 {
     SOURCES += \
-        $$quote($$BASEDIR/src/Lista.cpp) \
+        $$quote($$BASEDIR/src/AccountStatus.cpp) \
         $$quote($$BASEDIR/src/NetworkManager.cpp) \
         $$quote($$BASEDIR/src/applicationui.cpp) \
         $$quote($$BASEDIR/src/main.cpp)
 
     HEADERS += \
-        $$quote($$BASEDIR/src/Lista.hpp) \
+        $$quote($$BASEDIR/src/AccountStatus.h) \
         $$quote($$BASEDIR/src/NetworkManager.h) \
         $$quote($$BASEDIR/src/applicationui.hpp)
 }
