@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -27,15 +26,6 @@
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/LocaleHandler>
-#include <bb/cascades/DropDown>
-#include <bb/cascades/Option>
-#include <bb/cascades/WebView>
-#include <QFile>
-#include <QTextStream>
-#include <QNetworkReply>
-//#include "Lista.hpp"
-#include <bb/platform/Notification>
-#include <bb/platform/NotificationDefaultApplicationSettings>
 
 using namespace bb::cascades;
 QSettings settings("EmailConfirmation","listItem");

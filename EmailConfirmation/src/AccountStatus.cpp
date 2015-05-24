@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -23,7 +22,12 @@
 
 #include <src/AccountStatus.h>
 #include <QSettings>
+#include <QTimer>
 #include <QDebug>
+
+QString AccountStatus::NO_ACCOUNT_MSG = QString("Click the \"Add account\" button to simulate a new account with automatic email confirmation");
+QString AccountStatus::WAITING_CONFIRMATION_MSG = QString("Account [email] to be confirmed");
+QString AccountStatus::CONFIRMED_MSG = QString("Account [email] confirmed");
 
 AccountStatus::AccountStatus()
 {
@@ -55,22 +59,27 @@ void AccountStatus::saveForm(QString name, QString email) {
 
 void AccountStatus::resetStatus() {
     QSettings settings("EmailConfirmation","listItem");
-    settings.setValue("accountStatus", QString("No account"));
+    settings.setValue("accountStatus", NO_ACCOUNT_MSG);
     settings.setValue("name", QString(""));
     settings.setValue("email", QString(""));
+    emit confirmed();
 }
 
 QString AccountStatus::accountStatus() const {
     QSettings settings("EmailConfirmation","listItem");
-    return settings.value("accountStatus", QString("No account")).toString();
+    return settings.value("accountStatus", NO_ACCOUNT_MSG).toString();
 }
 
 void AccountStatus::refresh() {
-    qDebug() << "Refreshing settings";
+    QSettings settings("EmailConfirmation","listItem");
+    if (accountStatus() == CONFIRMED_MSG) {
+        emit confirmed();
+    }
     emit statusChanged();
 }
 
 void AccountStatus::onEmailSent() {
     QSettings settings("EmailConfirmation","listItem");
-    settings.setValue("accountStatus", QString("To be confirmed"));
+    settings.setValue("accountStatus", WAITING_CONFIRMATION_MSG);
+    emit waitingConfirmation();
 }

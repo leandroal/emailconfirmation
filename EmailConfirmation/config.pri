@@ -43,12 +43,7 @@ simulator {
 config_pri_assets {
     OTHER_FILES += \
         $$quote($$BASEDIR/assets/Register.qml) \
-        $$quote($$BASEDIR/assets/images/IMG_20150502_201042.png) \
-        $$quote($$BASEDIR/assets/images/IMG_20150502_201045.png) \
-        $$quote($$BASEDIR/assets/images/Sync.png) \
         $$quote($$BASEDIR/assets/images/ic_add.png) \
-        $$quote($$BASEDIR/assets/images/ic_settings.png) \
-        $$quote($$BASEDIR/assets/images/icon-gadget-medium.png) \
         $$quote($$BASEDIR/assets/main.qml)
 }
 

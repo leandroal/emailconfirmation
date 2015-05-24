@@ -43,7 +43,7 @@
 <context>
     <name>main</name>
     <message>
-        <source>Reset status</source>
+        <source>Clean confirmed account</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

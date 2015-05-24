@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -36,7 +35,6 @@ NetworkManager::~NetworkManager()
 }
 
 void NetworkManager::confirm(QUrl url) {
-    qDebug() << "NetworkManager::confirm(url=" << url << ");";
     bool connected = connect(&m_netManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
     Q_ASSERT(connected);
     QNetworkRequest request(url);
@@ -54,7 +52,7 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
         QVariantMap content = json.loadFromBuffer(contentString).toMap();
         bool ok;
         int replyCode = content["id"].toInt(&ok);
-        if (!ok) replyCode = 0;
+        if (!ok) replyCode = -1;
         emit confirmationCode(replyCode);
     }
     reply->deleteLater();

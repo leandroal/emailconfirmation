@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -37,6 +36,7 @@ class MessageHandler : public QObject
     Q_OBJECT
 public:
     static QRegExp URL_PARSER;
+    static QString DEFAULT_EMAIL;
     MessageHandler();
     virtual ~MessageHandler();
     bb::pim::message::MessageService* m_messageService;
@@ -46,7 +46,6 @@ public:
     QList<bb::pim::account::Account> m_accountList;
 public Q_SLOTS:
     void onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey);
-    void onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>);
     void onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey);
     void onCodeReceived(int code);
 private:

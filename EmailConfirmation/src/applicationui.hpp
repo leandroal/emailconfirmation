@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -25,12 +24,6 @@
 #define ApplicationUI_HPP_
 
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <bb/cascades/WebLoadRequest>
-#include <bb/system/InvokeRequest>
-#include <bb/system/InvokeManager>
 
 #include "NetworkManager.h"
 #include "AccountStatus.h"

@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -31,6 +30,9 @@ class AccountStatus: public QObject
     Q_OBJECT
     Q_PROPERTY(QString statusMessage READ accountStatus NOTIFY statusChanged)
 public:
+    static QString WAITING_CONFIRMATION_MSG;
+    static QString NO_ACCOUNT_MSG;
+    static QString CONFIRMED_MSG;
     AccountStatus();
     virtual ~AccountStatus();
     Q_INVOKABLE void resetStatus();
@@ -40,6 +42,8 @@ public:
     Q_INVOKABLE QString email() const;
 signals:
     void statusChanged();
+    void waitingConfirmation();
+    void confirmed();
 public slots:
     void onEmailSent();
     void refresh();

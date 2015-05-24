@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -53,18 +52,32 @@ Page {
             verticalAlignment: VerticalAlignment.Top
             horizontalAlignment: HorizontalAlignment.Center
             Button {
-                text: qsTr("Reset status")
+                text: qsTr("Clean confirmed account")
                 onClicked: {
                     _status.resetStatus();
                 }
             }
         }
+        
         Container {
             verticalAlignment: VerticalAlignment.Center
             horizontalAlignment: HorizontalAlignment.Center
+            Container {
+                horizontalAlignment: HorizontalAlignment.Center
+                ActivityIndicator {
+                    id: mActivity
+                    preferredHeight: 100
+                    preferredWidth: 100
+                    onCreationCompleted: {
+                        _status.waitingConfirmation.connect(mActivity.start);
+                        _status.confirmed.connect(mActivity.stop);
+                    }
+                }
+            }
             Label {
                 text: _status.statusMessage
                 textFit.minFontSizeValue: 11.0
+                multiline: true
             }
         }
     }

@@ -1,6 +1,5 @@
 /* E-mail confirmation sample for BlackBerry 10 - Client side
  * Copyright (C) <2015> Dielson Carvalho <dielson.carvalho@compelab.org>
- * Copyright (C) <2015> Durval Pereira <durval@compelab.org>
  * Copyright (C) <2015> Leandro Melo de Sales <leandro@compelab.org>
  *
  * This code is free software; you can redistribute it and/or
@@ -42,12 +41,12 @@ QRegExp MessageHandler::URL_PARSER = QRegExp("https?:"
         "([^?# \n\t]*)"
         "(?:\\?((?:\\S)*))?");
 
+QString MessageHandler::DEFAULT_EMAIL = QString("emailconfirmation@compelab.org");
+
 MessageHandler::MessageHandler() :
         QObject(), m_messageService(new MessageService)
 {
-    bool ok = connect(m_messageService, SIGNAL(messagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)), this, SLOT(onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)));
-    Q_ASSERT(ok);
-    ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
+    bool ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
     Q_ASSERT(ok);
     ok = connect(m_messageService, SIGNAL(bodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey)), this, SLOT(onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey)));
     Q_ASSERT(ok);
@@ -58,6 +57,7 @@ MessageHandler::MessageHandler() :
     settings->setPreview(bb::platform::NotificationPriorityPolicy::Allow);
     settings->apply();
 
+    // Also possible to pass "popemail" as argument if you wanna monitor POP messages
     m_accountList = AccountService().accounts(Service::Messages, "imapemail");
     if (!m_accountList.isEmpty()) {
         m_currentAccount = m_accountList.first();
@@ -79,7 +79,7 @@ void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey accountId, bb
     }
     Message msg = m_messageService->message(accountId, messageKey);
     if (msg.isInbound()) {
-        if (msg.sender().address() == "emailconfirmation@compelab.org") {
+        if (msg.sender().address() == DEFAULT_EMAIL) {
             QString emailContent = msg.body(MessageBody::PlainText).plainText();
             if (emailContent.isEmpty()) {
                 emailContent = msg.body(MessageBody::Html).plainText();
@@ -90,10 +90,6 @@ void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey accountId, bb
             confirmAccount(emailContent);
         }
     }
-}
-
-void MessageHandler::onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>) {
-    // Do nothing meanwhile
 }
 
 void MessageHandler::confirmAccount(QString content){
@@ -110,8 +106,6 @@ void MessageHandler::confirmAccount(QString content){
 void MessageHandler::onCodeReceived(int code) {
     if (code == 1) {
         QSettings settings("EmailConfirmation","listItem");
-        settings.setValue("accountStatus", QString("Account confirmed"));
-        qDebug() << ">> Account confirmed!";
-        settings.sync();
+        settings.setValue("accountStatus", QString("Account [email] confirmed"));
     }
 }
