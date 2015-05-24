@@ -37,6 +37,8 @@ public:
     NetworkManager();
     virtual ~NetworkManager();
     Q_INVOKABLE void submit(QString name, QString email, QString password);
+signals:
+    void emailSent();
 public slots:
     void onFinished(QNetworkReply*);
 private:

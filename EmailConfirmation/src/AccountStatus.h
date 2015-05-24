@@ -37,6 +37,7 @@ public:
 signals:
     void statusChanged();
 public slots:
+    void onEmailSent();
     void refresh();
 private:
     QFileSystemWatcher m_settingsWatcherInfo;

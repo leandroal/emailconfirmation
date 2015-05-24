@@ -46,3 +46,8 @@ void AccountStatus::refresh() {
     qDebug() << "Refreshing settings";
     emit statusChanged();
 }
+
+void AccountStatus::onEmailSent() {
+    QSettings settings("EmailConfirmation","listItem");
+    settings.setValue("accountStatus", QString("To be confirmed"));
+}

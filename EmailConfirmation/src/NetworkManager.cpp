@@ -46,7 +46,7 @@ void NetworkManager::submit(QString name, QString email, QString password) {
     parameters.addQueryItem("name", name);
     parameters.addQueryItem("email", email);
     parameters.addQueryItem("password", password);
-    QNetworkReply * reply = m_netManager.post(request, parameters.encodedQuery());
+    m_netManager.post(request, parameters.encodedQuery());
 }
 
 void NetworkManager::onFinished(QNetworkReply* reply) {
@@ -57,7 +57,12 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
         JsonDataAccess json;
         QString contentString = reply->readAll();
         QVariantMap content = json.loadFromBuffer(contentString).toMap();
-        qDebug() << content["message"].toString();
+        bool ok;
+        int replyCode = content["id"].toInt(&ok);
+        if (!ok) replyCode = -1;
+        if (replyCode == 0) {
+            emit emailSent();
+        }
     }
     reply->deleteLater();
 }

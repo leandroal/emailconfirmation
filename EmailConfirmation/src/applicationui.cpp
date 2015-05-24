@@ -45,9 +45,9 @@ ApplicationUI::ApplicationUI() :
 {
     m_pTranslator = new QTranslator(this);
     m_pLocaleHandler = new LocaleHandler(this);
-    bool res = QObject::connect(m_pLocaleHandler, SIGNAL(systemLanguageChanged()), this, SLOT(onSystemLanguageChanged()));
-    Q_ASSERT(res);
-    Q_UNUSED(res);
+    bool ok = QObject::connect(m_pLocaleHandler, SIGNAL(systemLanguageChanged()), this, SLOT(onSystemLanguageChanged()));
+    Q_ASSERT(ok);
+    ok = QObject::connect(&m_networkManager, SIGNAL(emailSent()), &m_status, SLOT(onEmailSent()));
     onSystemLanguageChanged();
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
     qml->setContextProperty("_appUI", this);
