@@ -29,8 +29,8 @@ $email = (isset($_POST['email'])) ? $_POST['email'] : '';
 
 if ((!empty($name)) && (!empty($email))) {
 	$subject = "Email Confirmation Sign up";
-	$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/emailconfirmation/confirm.php";
-	$header = "From:emailconfirmation@compelab.org \r\n";
+	$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/ec/scripts/confirm.php";
+	$header = 'From: E-mail confirmation Sample <emailconfirmation@compelab.org>';
 	mail($email, $subject, $message, $header);
 	$array = array('id' => '0', 'message' => 'e-mail confirmation sent.');
 	$json = json_encode($array);

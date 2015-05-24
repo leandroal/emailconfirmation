@@ -19,6 +19,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/*
+ * NOTE: Here, comes your code for validating the email.
+ * This is just an example.
+ */
 $array = array('id' => '1', 'message' => 'account confirmed');
 $json = json_encode($array);
 echo $json;
