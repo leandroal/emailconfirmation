@@ -32,6 +32,7 @@ Sheet {
                 title: qsTr("Submit")
                 onTriggered: {
                     _networkManager.submit(nameField.text, emailField.text, passwordField.text);
+                    _status.saveForm(nameField.text, emailField.text);
                     mSheet.close();
                 }
             }
@@ -54,6 +55,9 @@ Sheet {
                 TextField {
                     id: nameField
                     hintText: qsTr("Type your name")
+                    onCreationCompleted: {
+                        nameField.setText(_status.name());
+                    }
                 }
                 Label {
                     text: qsTr("Email")
@@ -62,6 +66,9 @@ Sheet {
                     id: emailField
                     hintText: qsTr("Type your email")
                     inputMode: TextFieldInputMode.EmailAddress
+                    onCreationCompleted: {
+                        emailField.setText(_status.email());
+                    }
                 }
                 Label {
                     text: qsTr("Password")

@@ -35,6 +35,9 @@ public:
     virtual ~AccountStatus();
     Q_INVOKABLE void resetStatus();
     Q_INVOKABLE QString accountStatus() const;
+    Q_INVOKABLE void saveForm(QString name, QString email);
+    Q_INVOKABLE QString name() const;
+    Q_INVOKABLE QString email() const;
 signals:
     void statusChanged();
 public slots:

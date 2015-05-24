@@ -37,9 +37,27 @@ AccountStatus::~AccountStatus()
 {
 }
 
+QString AccountStatus::name() const {
+    QSettings settings("EmailConfirmation","listItem");
+    return settings.value("name", QString("")).toString();
+}
+
+QString AccountStatus::email() const {
+    QSettings settings("EmailConfirmation","listItem");
+    return settings.value("email", QString("")).toString();
+}
+
+void AccountStatus::saveForm(QString name, QString email) {
+    QSettings settings("EmailConfirmation","listItem");
+    settings.setValue("name", name);
+    settings.setValue("email", email);
+}
+
 void AccountStatus::resetStatus() {
     QSettings settings("EmailConfirmation","listItem");
     settings.setValue("accountStatus", QString("No account"));
+    settings.setValue("name", QString(""));
+    settings.setValue("email", QString(""));
 }
 
 QString AccountStatus::accountStatus() const {

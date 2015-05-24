@@ -65,7 +65,6 @@ Page {
             Label {
                 text: _status.statusMessage
                 textFit.minFontSizeValue: 11.0
-
             }
         }
     }
