@@ -36,11 +36,11 @@ if ((!empty($name)) && (!empty($email))) {
 	$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/ec/scripts/confirm.php";
 	$headers .= "From: Sample in BlackBerry 10 <emailconfirmation@compelab.org>";
 	mail($email, $subject, $message, $headers);
-	$array = array('id' => '0', 'message' => 'e-mail confirmation sent.');
+	$array = array('id' => '0', 'message' => 'E-mail confirmation sent.');
 	$json = json_encode($array);
 	echo $json;
 } else {
-	$array = array('id' => '2', 'message' => 'invalid name and/or e-mail.');
+	$array = array('id' => '2', 'message' => 'Invalid name and/or e-mail.');
 	$json = json_encode($array);
 	echo $json;
 }
