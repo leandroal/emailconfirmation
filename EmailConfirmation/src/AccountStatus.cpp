@@ -37,6 +37,11 @@ AccountStatus::~AccountStatus()
 {
 }
 
+void AccountStatus::resetStatus() {
+    QSettings settings("EmailConfirmation","listItem");
+    settings.setValue("accountStatus", QString("No account"));
+}
+
 QString AccountStatus::accountStatus() const {
     QSettings settings("EmailConfirmation","listItem");
     return settings.value("accountStatus", QString("No account")).toString();

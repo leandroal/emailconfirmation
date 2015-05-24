@@ -46,8 +46,18 @@ Page {
         }
     ]
     Container {
+        topPadding: 30
         layout: DockLayout {
-            
+        }
+        Container {
+            verticalAlignment: VerticalAlignment.Top
+            horizontalAlignment: HorizontalAlignment.Center
+            Button {
+                text: qsTr("Reset status")
+                onClicked: {
+                    _status.resetStatus();
+                }
+            }
         }
         Container {
             verticalAlignment: VerticalAlignment.Center

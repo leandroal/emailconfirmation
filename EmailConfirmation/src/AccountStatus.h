@@ -33,6 +33,7 @@ class AccountStatus: public QObject
 public:
     AccountStatus();
     virtual ~AccountStatus();
+    Q_INVOKABLE void resetStatus();
     Q_INVOKABLE QString accountStatus() const;
 signals:
     void statusChanged();

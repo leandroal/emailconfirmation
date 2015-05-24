@@ -40,4 +40,11 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Reset status</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>
