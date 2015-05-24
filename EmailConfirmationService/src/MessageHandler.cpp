@@ -45,8 +45,6 @@ QRegExp MessageHandler::URL_PARSER = QRegExp("https?:"
 MessageHandler::MessageHandler() :
         QObject(), m_messageService(new MessageService)
 {
-    m_messageService = new MessageService();
-
     bool ok = connect(m_messageService, SIGNAL(messagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)), this, SLOT(onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)));
     Q_ASSERT(ok);
     ok = connect(m_messageService, SIGNAL(messageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)), this, SLOT(onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)));
@@ -59,15 +57,10 @@ MessageHandler::MessageHandler() :
     NotificationDefaultApplicationSettings * settings = new NotificationDefaultApplicationSettings;
     settings->setPreview(bb::platform::NotificationPriorityPolicy::Allow);
     settings->apply();
-    QStringList listAccounts;
 
-    m_accountList = AccountService().accounts(Service::Messages);
-    QList<Account> allAccounts = AccountService().allAccounts();
+    m_accountList = AccountService().accounts(Service::Messages, "imapemail");
     if (!m_accountList.isEmpty()) {
         m_currentAccount = m_accountList.first();
-        for(int i = 0; i < m_accountList.size(); i++){
-            listAccounts << m_accountList.at(i).displayName();
-        }
     }
 }
 
