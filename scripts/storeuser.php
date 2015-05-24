@@ -24,13 +24,20 @@
  * production environment due to the lack of additional parameters
  * handlings.
  */
-$email = (isset($_POST['email'])) ? $_POST['email'] : '';
 $name = (isset($_POST['name'])) ? $_POST['name'] : '';
+$email = (isset($_POST['email'])) ? $_POST['email'] : '';
 
-$to = $email;
-$subject = "Email Confirmation Sign up";
-$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/emailconfirmation/confirm.php";
-$header = "From:emailconfirmation@compelab.org \r\n";
-mail($to, $subject, $message, $header);
-
+if ((!empty($name)) && (!empty($email))) {
+	$subject = "Email Confirmation Sign up";
+	$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/emailconfirmation/confirm.php";
+	$header = "From:emailconfirmation@compelab.org \r\n";
+	mail($email, $subject, $message, $header);
+	$array = array('id' => '0', 'message' => 'e-mail confirmation sent.');
+	$json = json_encode($array);
+	echo $json;
+} else {
+	$array = array('id' => '2', 'message' => 'invalid name and/or e-mail.');
+	$json = json_encode($array);
+	echo $json;
+}
 ?>
