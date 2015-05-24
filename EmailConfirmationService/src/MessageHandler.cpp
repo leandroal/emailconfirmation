@@ -94,23 +94,10 @@ void MessageHandler::confirmAccount(QString content){
     QRegExp x = URL_PARSER;
     int pos = x.lastIndexIn(content);
     QString matchingString;
-    /*while ((pos = URL_PARSER.indexIn(content, pos)) != -1) {*/
-        matchingString = x.cap();
-        qDebug("###%s###", qPrintable(matchingString));
-        //pos += URL_PARSER.matchedLength();
-    //}
+    matchingString = x.cap();
     QUrl url(matchingString);
     Q_ASSERT(url.isValid());
     m_networkManager.confirm(url);
-    /* QStringList lists = content.split(" ");
-    foreach (QString s, lists) {
-        qDebug() << "testing" << s;
-        if (s.startsWith("http")) {
-            qDebug() << "URL is" << s;
-            QUrl url(s);
-            m_networkManager.confirm(url);
-        }
-    }*/
 }
 
 void MessageHandler::onCodeReceived(int code) {

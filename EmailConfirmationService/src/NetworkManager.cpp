@@ -28,11 +28,11 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
     if (reply->error() == QNetworkReply::NoError) {
         JsonDataAccess json;
         QString contentString = reply->readAll();
-        qDebug() << "contentString =" << contentString;
-        QVariantMap content = json.load(contentString).toMap();
-        int replyCode = content["id"].toInt();
+        QVariantMap content = json.loadFromBuffer(contentString).toMap();
+        bool ok;
+        int replyCode = content["id"].toInt(&ok);
+        if (!ok) replyCode = 0;
         emit confirmationCode(replyCode);
     }
-
     reply->deleteLater();
 }
