@@ -19,6 +19,13 @@ After that, the application will monitor incoming e-mail messages and, when the 
 
 ![](http://i.imgur.com/Isaa8ku.png)
 
+Diving into the source code
+---------------------------
+
+To be written.
+
+DIELSON, explica os conceitos básicos do código desse sample. Não precisa entrar em detalhes, apenas explicar o fluxo básico e explicar os principais trechos de código que achares necessário (não precisa detalhar nada).
+
 Applies to
 ----------
 
