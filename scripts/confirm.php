@@ -21,7 +21,8 @@
 
 /*
  * NOTE: Here, comes your code for validating the email.
- * This is just an example.
+ * This is just an example and you have to adapt the code for yor
+ * case.
  */
 $array = array('id' => '1', 'message' => 'account confirmed');
 $json = json_encode($array);
