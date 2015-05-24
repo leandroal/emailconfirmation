@@ -23,6 +23,7 @@
 
 #include "MessageHandler.hpp"
 #include <bb/pim/account/AccountService>
+#include <bb/pim/account/Provider>
 #include <bb/pim/message/MessageSearchFilter>
 #include <QList>
 #include <QSettings>
@@ -44,7 +45,6 @@ QRegExp MessageHandler::URL_PARSER = QRegExp("https?:"
 MessageHandler::MessageHandler() :
         QObject(), m_messageService(new MessageService)
 {
-
     m_messageService = new MessageService();
 
     bool ok = connect(m_messageService, SIGNAL(messagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)), this, SLOT(onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>)));
@@ -62,39 +62,31 @@ MessageHandler::MessageHandler() :
     QStringList listAccounts;
 
     m_accountList = AccountService().accounts(Service::Messages);
+    QList<Account> allAccounts = AccountService().allAccounts();
     if (!m_accountList.isEmpty()) {
         m_currentAccount = m_accountList.first();
         for(int i = 0; i < m_accountList.size(); i++){
             listAccounts << m_accountList.at(i).displayName();
         }
     }
-    QSettings settingsEmail("EmailConfirmation","listItem");
-    settingsEmail.setValue("accounts", listAccounts);
-    //filterMessages();
 }
 
 MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey conversationKey, bb::pim::message::MessageKey messageKey)
+void MessageHandler::onMessageAdded(bb::pim::account::AccountKey, bb::pim::message::ConversationKey, bb::pim::message::MessageKey)
 {
 }
 
-void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::message::MessageKey messageKey)
+void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey accountId, bb::pim::message::MessageKey messageKey)
 {
-    qDebug() << "Messagehandler::filterMessages()";
-    // QSettings settingsEmail("EmailConfirmation", "listItem");
     if (!m_currentAccount.isValid()) {
         return;
     }
-    MessageSearchFilter filter;
-    filter.addSearchCriteria(SearchFilterCriteria::FromAddress, "emailconfirmation@compelab.org");
-
-    const QList<Message> messages = m_messageService->searchLocal(bb::pim::message::UndefinedKey, filter);
-    foreach (Message msg, messages) {
-        if (msg.isInbound() && msg.id() == messageKey) {
-            qDebug() << "Message inbound:" << msg.subject();
+    Message msg = m_messageService->message(accountId, messageKey);
+    if (msg.isInbound()) {
+        if (msg.sender().address() == "emailconfirmation@compelab.org") {
             QString emailContent = msg.body(MessageBody::PlainText).plainText();
             if (emailContent.isEmpty()) {
                 emailContent = msg.body(MessageBody::Html).plainText();
@@ -109,7 +101,6 @@ void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey, bb::pim::mes
 
 void MessageHandler::onMessagesAdded(bb::pim::account::AccountKey, QList<bb::pim::message::ConversationKey>, QList<bb::pim::message::MessageKey>) {
     // Do nothing meanwhile
-
 }
 
 void MessageHandler::confirmAccount(QString content){
@@ -127,7 +118,7 @@ void MessageHandler::onCodeReceived(int code) {
     if (code == 1) {
         QSettings settings("EmailConfirmation","listItem");
         settings.setValue("accountStatus", QString("Account confirmed"));
-        qDebug() << ">>> Account confirmed!";
+        qDebug() << ">> Account confirmed!";
         settings.sync();
     }
 }

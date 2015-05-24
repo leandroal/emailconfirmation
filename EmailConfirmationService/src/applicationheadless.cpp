@@ -40,6 +40,8 @@ ApplicationHeadless::ApplicationHeadless()
     , m_invokeManager(new InvokeManager(this))
 {
     QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
+    QSettings settings("EmailConfirmation","listItem");
+    settings.setValue("configVersion", 1);
 }
 
 void ApplicationHeadless::onInvoked(const bb::system::InvokeRequest& request)
