@@ -28,10 +28,14 @@ $name = (isset($_POST['name'])) ? $_POST['name'] : '';
 $email = (isset($_POST['email'])) ? $_POST['email'] : '';
 
 if ((!empty($name)) && (!empty($email))) {
+	$headers = "";
+	// To send HTML mail, the Content-type header must be set
+	//$headers .= 'MIME-Version: 1.0' . "\r\n";
+	//$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	$subject = "Sample of automatic e-mail confirmation in BlackBerry 10";
 	$message = "Dear " . $name . ", thanks for signing up for our service. To confirm your account, please click on the url: http://www.compelab.org/ec/scripts/confirm.php";
-	$header = 'From: Sample in BlackBerry 10 <emailconfirmation@compelab.org>';
-	mail($email, $subject, $message, $header);
+	$headers .= "From: Sample in BlackBerry 10 <emailconfirmation@compelab.org>";
+	mail($email, $subject, $message, $headers);
 	$array = array('id' => '0', 'message' => 'e-mail confirmation sent.');
 	$json = json_encode($array);
 	echo $json;
