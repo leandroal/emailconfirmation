@@ -22,10 +22,11 @@
  */
 
 #include <QDebug>
+#include <bb/data/JsonDataAccess>
 
 #include "NetworkManager.h"
 
-QUrl NetworkManager::ACCOUNT_URL = QUrl("http://www.compelab.org/emailconfirmation/storeuser.php");
+QUrl NetworkManager::ACCOUNT_URL = QUrl("http://www.compelab.org/ec/scripts/storeuser.php");
 
 NetworkManager::NetworkManager()
 {
@@ -45,11 +46,18 @@ void NetworkManager::submit(QString name, QString email, QString password) {
     parameters.addQueryItem("name", name);
     parameters.addQueryItem("email", email);
     parameters.addQueryItem("password", password);
-    m_netManager.post(request, parameters.encodedQuery());
+    QNetworkReply * reply = m_netManager.post(request, parameters.encodedQuery());
 }
 
 void NetworkManager::onFinished(QNetworkReply* reply) {
+    using namespace bb::data;
     bool disconnected = disconnect(&m_netManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
     Q_ASSERT(disconnected);
+    if (reply->error() == QNetworkReply::NoError) {
+        JsonDataAccess json;
+        QString contentString = reply->readAll();
+        QVariantMap content = json.loadFromBuffer(contentString).toMap();
+        qDebug() << content["message"].toString();
+    }
     reply->deleteLater();
 }
