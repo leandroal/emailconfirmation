@@ -53,7 +53,6 @@ public:
     ApplicationUI();
     virtual ~ApplicationUI() {}
     QNetworkAccessManager *manager;
-    Q_INVOKABLE void addElementsDropDown(QObject* element);
 private slots:
     void onSystemLanguageChanged();
 private:

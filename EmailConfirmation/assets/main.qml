@@ -25,9 +25,6 @@ import bb.cascades 1.4
 
 Page {
     attachedObjects: [
-        SettingsPage {
-            id:settingsPage
-        },
         ComponentDefinition {
             id: mRegisterFactory
             Register {
@@ -36,12 +33,6 @@ Page {
     ]
     titleBar: TitleBar {
         title: "Account Status"
-        acceptAction: ActionItem {
-            imageSource: "asset:///images/ic_settings.png"
-            onTriggered: {
-                settingsPage.open()
-            }
-        }
     }
     actions: [
         ActionItem {

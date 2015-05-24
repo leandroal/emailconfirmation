@@ -68,13 +68,4 @@ void ApplicationUI::onSystemLanguageChanged()
     }
 }
 
-void ApplicationUI::addElementsDropDown(QObject* element){
-    DropDown* dropDown = qobject_cast<DropDown*>(element);
-
-
-   QStringList listAccounts =  settings.value("accounts").toStringList();
-   for(int i = 0; i < listAccounts.size(); i++){
-       dropDown->add(Option::create().text(listAccounts.at(i)));
-   }
-}
 
