@@ -106,6 +106,11 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
     reply->deleteLater();
 ```
 
+Server side scripts
+===================
+
+This example requires the use of a server side script. These scripts are available in the scripts folder. The storeuser.php script simulates the user sign up and sends a confirmation e-mail, while the confirm.php scripts simulates the proper account confirmation.
+
 Applies to
 ----------
 
