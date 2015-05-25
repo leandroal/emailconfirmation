@@ -137,7 +137,7 @@ But I don't want to build it myself!
 
 If you don't want to build this sample application yourself we've included a pre-built and signed BAR file. You can find it in the folder "installable-bar-files" as follows:
 
-* **AudioAccessory-1_0_0_2.bar** - Signed BAR file for Version 1.0 (V1.0) of the application (minimal requirement BlackBerry 10 Software 10.3)
+* **AudioAccessory-1_0_0_3.bar** - Signed BAR file for Version 1.0 (V1.0) of the application (minimal requirement BlackBerry 10 Software 10.3)
 
 Known issues
 ------------
