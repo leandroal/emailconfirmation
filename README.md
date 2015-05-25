@@ -22,9 +22,88 @@ After that, the application will monitor incoming e-mail messages and, when the 
 Diving into the source code
 ---------------------------
 
-To be written.
+The application is split in two parts: a headless service and a UI application that shows information to the user.
 
-DIELSON, explica os conceitos básicos do código desse sample. Não precisa entrar em detalhes, apenas explicar o fluxo básico e explicar os principais trechos de código que achares necessário (não precisa detalhar nada).
+The UI basically just sends a POST request to the server with the informations needed (email and name -- for simplicity, the password is just ignored):
+
+```cpp
+void NetworkManager::submit(QString name, QString email, QString password) {
+    bool connected = connect(&m_netManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
+    Q_ASSERT(connected);
+    QNetworkRequest request(ACCOUNT_URL);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    QUrl parameters;
+    parameters.addQueryItem("name", name);
+    parameters.addQueryItem("email", email);
+    m_netManager.post(request, parameters.encodedQuery());
+}
+```
+
+The server is supposed to return a confirmation message that the email was sent, so it checks for that:
+
+```cpp
+void NetworkManager::onFinished(QNetworkReply* reply) {
+    using namespace bb::data;
+    bool disconnected = disconnect(&m_netManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
+    Q_ASSERT(disconnected);
+    if (reply->error() == QNetworkReply::NoError) {
+        JsonDataAccess json;
+        QString contentString = reply->readAll();
+        qDebug() << "POST reply:" << contentString;
+        QVariantMap content = json.loadFromBuffer(contentString).toMap();
+        bool ok;
+        int replyCode = content["id"].toInt(&ok);
+        if (!ok) replyCode = -1;
+        if (replyCode == 0) {
+            emit emailSent();
+        }
+    }
+    reply->deleteLater();
+}
+```
+
+After that, the service will catch any incoming messages and check for the sender address. When the right email comes, it will trigger a notification and try to confirm:
+
+```cpp
+void MessageHandler::onBodyDownloaded(bb::pim::account::AccountKey accountId, bb::pim::message::MessageKey messageKey)
+{
+    if (!m_currentAccount.isValid()) {
+        return;
+    }
+    Message msg = m_messageService->message(accountId, messageKey);
+    if (msg.isInbound()) {
+        if (msg.sender().address() == DEFAULT_EMAIL) {
+            QString emailContent = msg.body(MessageBody::PlainText).plainText();
+            if (emailContent.isEmpty()) {
+                emailContent = msg.body(MessageBody::Html).plainText();
+            }
+            m_notification.setBody("A new confirmation email just arrived");
+            m_notification.notify();
+
+            confirmAccount(emailContent);
+        }
+    }
+}
+```
+
+The confirmAccount function parses the URL in the email body and tries to request it. If the result has the right message, it means the email was confirmed.
+
+```cpp
+void NetworkManager::onFinished(QNetworkReply* reply) {
+    using namespace bb::data;
+    bool disconnected = disconnect(&m_netManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply*)));
+    Q_ASSERT(disconnected);
+    if (reply->error() == QNetworkReply::NoError) {
+        JsonDataAccess json;
+        QString contentString = reply->readAll();
+        QVariantMap content = json.loadFromBuffer(contentString).toMap();
+        bool ok;
+        int replyCode = content["id"].toInt(&ok);
+        if (!ok) replyCode = -1;
+        emit confirmationCode(replyCode);
+    }
+    reply->deleteLater();
+```
 
 Applies to
 ----------
