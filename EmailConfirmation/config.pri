@@ -44,6 +44,7 @@ config_pri_assets {
     OTHER_FILES += \
         $$quote($$BASEDIR/assets/Register.qml) \
         $$quote($$BASEDIR/assets/images/ic_add.png) \
+        $$quote($$BASEDIR/assets/images/image.png) \
         $$quote($$BASEDIR/assets/main.qml)
 }
 
