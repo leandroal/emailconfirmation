@@ -8,16 +8,17 @@ When the e-mail confirmation is received in a user e-mail inbox, the application
 
 When the user opens the app, (s)he can see the account status. If there no account, the sample application will show the message "Click in the add account button to simulate a new account with automatic e-mail conformation.", as shown below.
 
-![](http://i.imgur.com/gMKhc32.png)
+![](http://i.imgur.com/Zxc9ApA.png)
 
 As suggested, to simulate a new user sign up, just click on the add account button and fill out the following form:
 
 ![](http://i.imgur.com/GZOOtk9.png)
-![](http://i.imgur.com/URzWq3u.png)
+![](http://i.imgur.com/A4rsln3.png)
 
 After that, the application will monitor incoming e-mail messages and, when the proper confirmation message arrives in the user e-mail inbox, it automatically confirms the account by sending an HTTP request to the corresponding web link. If a proper response is returned, the status will be updated to "Account confirmed", as depicted below.
 
 ![](http://i.imgur.com/Isaa8ku.png)
+![](http://i.imgur.com/UA5Jz1p.png)
 
 Diving into the source code
 ---------------------------
