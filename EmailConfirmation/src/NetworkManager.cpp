@@ -43,7 +43,6 @@ void NetworkManager::submit(QString name, QString email, QString password) {
     QUrl parameters;
     parameters.addQueryItem("name", name);
     parameters.addQueryItem("email", email);
-    parameters.addQueryItem("password", password);
     m_netManager.post(request, parameters.encodedQuery());
 }
 
