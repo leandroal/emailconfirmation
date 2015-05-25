@@ -20,8 +20,7 @@ After that, the application will monitor incoming e-mail messages and, when the 
 ![](http://i.imgur.com/Isaa8ku.png)
 ![](http://i.imgur.com/UA5Jz1p.png)
 
-Diving into the source code
----------------------------
+# Diving into the source code
 
 The application is split in two parts: a headless service and a UI application that shows information to the user.
 
@@ -106,12 +105,11 @@ void NetworkManager::onFinished(QNetworkReply* reply) {
     reply->deleteLater();
 ```
 
-Server side scripts
-===================
+## Server side scripts
 
 This example requires the use of a server side script. These scripts are available in the scripts folder. The storeuser.php script simulates the user sign up and sends a confirmation e-mail, while the confirm.php scripts simulates the proper account confirmation.
 
-Applies to
+# Applies to
 ----------
 
 [BlackBerry Native SDK](http://developer.blackberry.com/native/)
