@@ -106,6 +106,6 @@ void MessageHandler::confirmAccount(QString content){
 void MessageHandler::onCodeReceived(int code) {
     if (code == 1) {
         QSettings settings("EmailConfirmation","listItem");
-        settings.setValue("accountStatus", QString("Account [email] confirmed"));
+        settings.setValue("accountStatus", QString("Account %1 confirmed").arg(settings.value("email").toString()));
     }
 }

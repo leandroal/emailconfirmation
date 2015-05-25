@@ -26,8 +26,8 @@
 #include <QDebug>
 
 QString AccountStatus::NO_ACCOUNT_MSG = QString("Click the \"Add account\" button to simulate a new account with automatic email confirmation");
-QString AccountStatus::WAITING_CONFIRMATION_MSG = QString("Account [email] to be confirmed");
-QString AccountStatus::CONFIRMED_MSG = QString("Account [email] confirmed");
+QString AccountStatus::WAITING_CONFIRMATION_MSG = QString("Account %1 to be confirmed");
+QString AccountStatus::CONFIRMED_MSG = QString("Account %1 confirmed");
 
 AccountStatus::AccountStatus()
 {
@@ -72,7 +72,7 @@ QString AccountStatus::accountStatus() const {
 
 void AccountStatus::refresh() {
     QSettings settings("EmailConfirmation","listItem");
-    if (accountStatus() == CONFIRMED_MSG) {
+    if (accountStatus() == CONFIRMED_MSG.arg(email())) {
         emit confirmed();
     }
     emit statusChanged();
@@ -80,6 +80,6 @@ void AccountStatus::refresh() {
 
 void AccountStatus::onEmailSent() {
     QSettings settings("EmailConfirmation","listItem");
-    settings.setValue("accountStatus", WAITING_CONFIRMATION_MSG);
+    settings.setValue("accountStatus", WAITING_CONFIRMATION_MSG.arg(email()));
     emit waitingConfirmation();
 }
